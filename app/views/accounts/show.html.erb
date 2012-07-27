@@ -1,0 +1,68 @@
+<% title 'Account Settings' %>
+
+<div class="clear"></div>
+<!-- End .clear -->
+
+<div class="box box-100">
+  <div class="boxin">
+    <div class="header">
+      <h3>Account Settings</h3>
+    </div>
+    <div class="content contentAlt settings">
+
+      <div class="setting">
+        <h3>Users and Permissions</h3>
+        <ol>
+          <li>Manage Users and Permissions <%= link_to "here", :controller => :users %>.</li>
+        </ol>
+      </div>
+      <hr/>
+
+      <div class="setting">
+        <h3>Application Settings</h3>
+        <ol>
+          <li>Change setting of the application <%= link_to "here", edit_account_path %>.</li>
+        </ol>
+      </div>
+      <hr/>
+
+      <div class="setting">
+        <h3>External Site Settings</h3>
+        <ol>
+          <li>Modify the look and behaviour of the external
+            site <%= link_to "here", :controller => :site_settings, :action => :show %>.
+          </li>
+        </ol>
+      </div>
+      <hr/>
+
+      <div class="setting">
+        <h3>Snippets</h3>
+        <ol>
+          <li>Modify various text snippets that your visitors will see <%= link_to "here", snippets_path %>.
+          </li>
+        </ol>
+      </div>
+      <hr/>
+
+      <div class="setting">
+        <h3>Locales</h3>
+        <ol>
+          <li>Add and remove locales <%= link_to "here", locales_path %>.</li>
+        </ol>
+      </div>
+      <hr/>
+
+      <div class="setting">
+        <h3>Case Deflection Settings</h3>
+        <ol>
+          <li>Change setting of the case deflection <%= link_to "here", case_deflection_settings_path %>.</li>
+        </ol>
+      </div>
+      <hr/>
+
+    </div>
+  </div>
+</div>
+
+

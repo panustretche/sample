@@ -1,0 +1,18 @@
+<table id="feedbacks">
+  <thead>
+    <tr>
+      <th>Comment</th>
+      <th>Posted on</th>
+      <th>Ratings</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @article.feedbacks.each do |feedback| %>
+      <tr>
+        <td><%= truncate(feedback.comment, :length => 44) %></td>
+        <td><%= l feedback.created_at, :format => :shorter_date_time %></td>
+        <td><%= render_stars(feedback.rating) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

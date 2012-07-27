@@ -1,0 +1,60 @@
+<div class="clear"></div>
+<!-- End .clear -->
+
+<div class="box box-100">
+  <div class="boxin">
+    <div class="header">
+      <h3>Search Results for &ldquo;<%= @query %>&rdquo;</h3>
+    </div>
+    <div id="box1-tabular" class="content">
+    <%= render :partial => "list" %>
+    </div>
+  </div>
+</div>
+
+<% javascript 'lib/jquery.alerts' %>
+<% stylesheet 'lib/jquery.alerts' %>
+
+<% content_for :head do %>
+<script type='text/javascript'>
+
+$(function() {
+  $(".pagination a").live("click", function() {
+    //$(".pagination").html("Page is loading...");
+    $.get(this.href, null, null, "script");
+    return false;
+  });
+});
+
+$('.deleteArticle').livequery(function() {
+    $(this).deleteWithConfirmation();
+});
+
+$.fn.deleteWithConfirmation = function() {
+	this.removeAttr('onclick');
+	this.unbind('click', false);
+	this.click(function(e) {
+		sender = $(this);
+		parent = $(this.parentNode);
+		e.preventDefault();
+		jConfirm('Are you sure you want to delete this article?', 'Confirm Article Deletion', function(r) {
+			if(r==true){
+				var f = document.createElement('form'); 
+				f.style.display = 'none'; 
+				parent.append(f); 
+				f.method = 'POST'; 
+				f.action = sender.attr('href');
+				var m = document.createElement('input'); 
+				m.setAttribute('type', 'hidden'); 
+				m.setAttribute('name', '_method'); 
+				m.setAttribute('value', 'delete'); 
+				f.appendChild(m);
+				f.submit();
+			}
+		});
+		return false;
+	})	
+};
+
+</script>
+<% end %>

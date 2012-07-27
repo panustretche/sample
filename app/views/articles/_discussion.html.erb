@@ -1,0 +1,17 @@
+<h1>Discussion relating to Article</h1>
+<div class="discussion">
+  <ul id="comments">
+    <%= render partial: "comments/comment", collection: @article.comments %>
+    <% if @article.comments.empty? %><li class="comment" style="clear:left"></li><% end %>
+  </ul>
+</div>
+<br/>
+
+
+<%= form_tag(article_comments_path(@article), :id => "submit-comment") do %>
+
+  <%= label :comment, :comment, 'Add a comment' %><br/>
+  <%= text_area_tag 'comment[comment]', nil, :class => "text-input medium-wide-input", :rows => 5 %>
+<br/>
+  <%= submit_tag 'Add Comment', :class => 'button altbutton' %>
+<% end %>

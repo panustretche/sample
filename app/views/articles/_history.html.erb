@@ -1,0 +1,29 @@
+<table id="articles">
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Updated by</th>
+      <th>Modified</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for version in @article.versions.all(:order => "id DESC") %>
+      <%= content_tag_for :tr, version do %>
+        <td>
+        <%= version.version %>
+        <% if @article.latest_version_id == version.id %><span class="tag-large tag-gray">current</span><% end %>
+        <% if @article.published_version_id == version.id %><span class="tag-large tag-gray">published</span><% end %>
+        </td>
+        <td><%= version.author.name %></td>
+        <td><%= l version.created_at, :format => :shorter_date_time %></td>
+        <td class="tc">
+          <ul class="actions">
+            <li><%= link_to image_tag("/images/icons/page_copy.png"), article_version_path(@article, version), :title  => "Compare and revert", :class => "ico" unless @article.latest_version_id == version.id %></li>
+          </ul>
+        </td>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+

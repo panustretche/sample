@@ -1,0 +1,35 @@
+<% javascript "lib/jquery.tablesorter.min", "lib/json2", "lib/jquery.store", "dashboard" %>
+<div class="clear"></div>
+<!-- End .clear -->
+
+<div class="box box-100">
+  <div class="boxin">
+    <div class="header">
+      <h3>Articles</h3>
+      <%= my_button_to 'Create New Article', {:controller => "articles", :action => "new"}, :class => "button altbutton" %>
+    </div>
+    <div id="box1-tabular" class="content">
+    <div id="article-content">
+        <%= render :partial => "list" %>
+    </div>
+    </div>
+  </div>
+</div>
+
+<% javascript 'lib/jquery.alerts' %>
+<% stylesheet 'lib/jquery.alerts' %>
+
+<% content_for :head do %>
+<script type='text/javascript'>
+
+$(function() {
+  $(".pagination a").live("click", function() {
+    //$(".pagination").html("Page is loading...");
+    $.get(this.href, null, null, "script");
+    return false;
+  });
+});
+
+</script>
+<% end %>
+

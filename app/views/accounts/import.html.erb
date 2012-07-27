@@ -1,0 +1,28 @@
+<% title 'Import Tools' %>
+
+<div class="clear"></div>
+<!-- End .clear -->
+
+<div class="box box-100">
+  <div class="boxin">
+    <div class="header">
+      <h3>Data Import Tools</h3>
+    </div>
+    <div class="content contentAlt settings">
+
+      <div class="setting">
+        <h3>Data Import</h3>
+		  <br/>
+		  <%= form_tag({:action => :import_data }, { :multipart => true }) %>
+	      <p class="inline">
+			<%= file_field_tag :zipfile, :accept => 'application/zip', :class => 'upload' %><br/><br/>
+	        <%= submit_tag 'Import', :class => "button altbutton" %>
+	      </p>
+	      </form>
+      </div>
+	<hr/>
+	<%= my_button_to 'Back', {:action => "show"}, :method => "get", :class => "button altbutton" -%>
+    </div>
+  </div>
+</div>
+

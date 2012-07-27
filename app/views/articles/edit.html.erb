@@ -1,0 +1,51 @@
+<div class="clear"></div>
+<!-- End .clear -->
+
+<div id="article" class="box box-100">
+  <div class="boxin">
+    <div class="header">
+      <h3>Edit Article</h3>
+      <ul>
+        <!-- insert ID of content related to this tab into the rel attribute of this tab -->
+        <li><a rel="editing" href="#editing" class="active">Edit</a></li>
+        <li><a rel="discussion" href="#discussion">Discussion</a></li>
+        <li><a rel="feedbacks" href="#feedbacks">Feedbacks</a></li>
+        <li><a rel="statistics" href="#statistics">Statistics</a></li>
+				<li><a rel="history" href="#history">History</a></li>
+      </ul>
+    </div>
+    <div id="editingContent" class="contentAlt">
+      <%= render "form" %>
+    </div>
+    <div id="discussionContent" class="contentAlt">
+      <%= render :partial => "discussion" %>
+    </div>
+    <div id="feedbacksContent" class="contentAlt">
+      <div class="box box-100">
+        <div class="boxin">
+          <div class="header">
+            <h3>Public Feedbacks</h3>
+          </div>
+          <div class="content">
+            <%= render "feedbacks" %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="statisticsContent" class="contentAlt">
+      <%= render "statistics" %>
+    </div>
+    <div id="historyContent" class="contentAlt">
+      <div class="box box-100">
+        <div class="boxin">
+          <div class="header">
+            <h3>Revision History</h3>
+          </div>
+          <div class="content">
+            <%= render :partial => "history" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

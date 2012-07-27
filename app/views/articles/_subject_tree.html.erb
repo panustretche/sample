@@ -1,0 +1,13 @@
+<div style="display:none;" id="subject-tree-dialog">
+	<h2>Select the Subjects that this Article relates to.</h2>
+	<hr/>
+	<div class="subjects" id="subject_tree"></div>
+</div>
+
+<% javascript 'lib/facebax', 'lib/jquery.jstree' %>
+<% stylesheet 'lib/facebax' %>
+
+<% content_for :head do %>
+  <%= javascript_tag "var subject_tree_data = [#{current_account.root_node.json_children(filter: :subjects).to_json}];" %>
+  <%= javascript_include_tag 'article_subject_tree' %>
+<% end %>

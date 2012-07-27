@@ -1,0 +1,24 @@
+<div class="clear"></div>
+<!-- End .clear -->
+
+
+<div id="article" class="box box-100">
+  <div class="boxin">
+    <div class="header">
+      <h3>Assign Article</h3>
+    </div>
+    <div id="editing" class="contentAlt">
+      <%= form_for @article, :url => {:action => "assign"} do |f| %>
+        <%= f.error_messages :header_message => "", :message => "" %>
+        <p>
+          <%= f.label :assigned_to_id, %(Assign "#{@article.title}" to:) %><br />
+          <%= f.collection_select :assigned_to_id, current_account.users, :id, :name, {:include_blank => "Unassigned"} %>
+        </p>
+        <br />
+        <%= f.submit "Save", :class => "button altbutton" -%>
+        <%= my_button_to 'Cancel', {:action => "index"}, :method => "get", :class => "button altbutton" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+

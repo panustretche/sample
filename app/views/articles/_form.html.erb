@@ -1,0 +1,124 @@
+<%- javascript 'lib/jquery.alerts', 'lib/tiny_mce/jquery.tinymce', 'lib/tiny_mce/tiny_mce', 'lib/jquery.fcbkcomplete', 'lib/markitup/jquery.markitup', 'lib/markitup/sets/textile/set', 'lib/textile.js', 'articles' -%>
+<%- stylesheet 'lib/jquery.alerts', 'lib/markitup/skins/simple/style', 'lib/markitup/sets/textile/style' -%>
+<% content_for :stylesheet do %>
+<style type="text/css">
+  #facebox .body { padding: 0 !important; }
+  #facebox .footer { margin: 0 10px 10px 5px; }
+</style>
+<% end %>
+
+<%= form_for @article do |f| %>
+  <%= f.error_messages :header_message => "", :message => "" %>
+  <div class="submit">
+    <%= f.submit "Save Changes", :class => "button altbutton" -%>
+    <%= my_button_to 'Discard Changes', {:action => "index"}, :method => "get", :class => "button altbutton" %>
+    <%= button_to_function "Delete", nil, :class => "button altbutton", :id => "delete_button" unless @article.new_record? %>
+    <%= my_button_to 'Preview', {:controller => 'external/articles', :action => 'show', :id => @article}, :method => "get", :class => "button altbutton" unless @article.new_record? %>
+    <%= f.hidden_field :uuid %>
+  </div>
+	<hr/>
+  <div>
+    <%= label :form, :locale_id, 'Locale' %><br/>
+    <%= collection_select :form, :locale_id, current_account.locales, :id, :to_s, {:selected => current_account.default_locale_id} %>
+  </div>
+  <br/>
+  <table class="assignTable">
+    <tr>
+      <td><%= f.label :reference, 'Reference' %></td>
+      <td><%= f.label :state, 'Status' %></td>
+      <td><%= f.label :assigned_to_id, 'Assigned To' %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>
+        <div class="text-input">
+          <%= f.text_field :reference, :class => "medium-wide-input", :size => 15 %>
+        </div>
+      </td>
+      <td>
+        <%= f.select :state , Article::STATES, {}, :disabled => !current_role.is_approver %>
+      </td>
+      <td>
+        <%= f.collection_select :assigned_to_id, current_account.users, :id, :name, {:include_blank => "Unassigned"} %>
+      </td>
+      <td>
+        <%= f.check_box :priority, :style => "margin-top: 9px"%><%= f.label :priority, 'High Priority' %>
+      </td>
+      <td>
+        <%= f.check_box :exclude_from_search, :style => "margin-top: 9px"%><%= f.label :exclude_from_search, 'Exclude From Search' %>
+      </td>
+      <td>
+        <%= f.check_box :exclude_from_faq, :style => "margin-top: 9px"%><%= f.label :exclude_from_faq, 'Exclude From FAQ' %>
+      </td>
+      <td>
+        <%= f.check_box :internal, :style => "margin-top: 9px"%><%= f.label :internal, 'Internal Only' %>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <div>
+    <%= f.label :title, 'Title' %><br/>
+    <div class="text-input">
+      <% current_account.locales.each do |locale| %>
+        <%= text_field "article[translations][#{locale.to_param}]", :title, :class => ["medium-wide-input", "translatable", "article_title", "locale_#{locale.to_param}", ("active" if locale.is_default?)], :value => @article.title(locale) %>
+      <% end %>
+    </div>
+    <div id="article_title_warning" style="color: red; padding: 3px 5px; display: none"><strong>Warning: </strong>Title is duplicate</div>
+  </div>
+  <br/>
+  <div id="permalink" style="<%= 'display: none;' if @article.new_record? %>">
+    <div>
+      <%= f.label :permalink, 'Permalink' %><br/ >
+      <div class="text-input">
+        <% current_account.locales.each do |locale| %>
+          <%= text_field "article[translations][#{locale.to_param}]", :permalink, :class => ["medium-wide-input", "translatable", "article_permalink", "locale_#{locale.to_param}", ("active" if locale.is_default?)], :value => @article.permalink(locale) %>
+        <% end %>
+      </div>
+    </div>
+    <br />
+  </div>
+  <div style="position: relative; z-index: 20;">
+    <div id="subject-selector">
+      <%= f.label :subject_ids, 'Subjects' %>
+      <%= f.collection_select :subject_ids, current_account.subjects, :id, :title_with_parent, {}, :multiple => true %>
+      <a href="#subject-tree-dialog" rel="facebax" class="button altbutton">...</a>
+      <%= render :partial => "subject_tree" %>
+    </div>
+    <div id="tag-selector">
+      <%= f.label :tag_list, 'Tags' %>
+      <%= hidden_field_tag 'article[tag_list][]', '' %>
+      <%= f.select :tag_list, (current_account.owned_tags.collect(&:name) | f.object.tag_list), {}, :multiple => true %>
+    </div>
+  </div>
+  <%= f.label :content, 'Content', :style => "display: none;" %>
+  <div id="article_content_container" style="position: relative; z-index: 10;"<%= ' class="preview_on_right"'.html_safe if current_user.article_preview_on_right %>>
+    <% current_account.locales.each do |locale| %>
+      <%= text_area "article[translations][#{locale.to_param}]", :content, :class => ["article_content", "translatable", "locale_#{locale.to_param}", ("active" if locale.is_default?)], :value => @article.content(locale) %>
+    <% end %>
+    <h4 id="preview-header">
+      <% unless current_user.article_preview_on_right %>
+        <a href="#" id="preview-alignment" title="Move the preview next to the content editor"><img src="/images/application_tile_vertical.png" /></a>
+      <% else %>
+        <a href="#" id="preview-alignment" title="Move the preview to be below the content editor"><img src="/images/application_tile_horizontal.png" /></a>
+      <% end %>
+      Preview
+    </h4>
+    <div id="preview"></div>
+    <div class="clear"></div>
+  </div>
+  <hr/>
+  <div class="submit">
+    <%= f.submit "Save Changes", :class => "button altbutton" -%>
+    <%= my_button_to 'Discard Changes', {:action => "index"}, :method => "get", :class => "button altbutton" %>
+    <%= button_to_function "Delete", nil, :class => "button altbutton", :id => "delete_button" unless @article.new_record? %>
+    <%= my_button_to 'Preview', {:controller => 'external/articles', :action => 'show', :id => @article}, :method => "get", :class => "button altbutton" unless @article.new_record? %>
+    <%= f.hidden_field :uuid %>
+  </div>
+  <div class="clear"></div>
+<% end %>
+
+<%= form_for @article, :html => { :method => :delete, :id => "delete_article", :class => "delete_article" } do |f| %>
+<% end %>

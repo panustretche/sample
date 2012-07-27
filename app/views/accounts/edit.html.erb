@@ -1,0 +1,28 @@
+<% title "Application Settings" %>
+
+<div class="box box-100">
+  <div class="boxin">
+    <div class="header">
+      <h3>Application Settings</h3>
+    </div>
+    <div class="content contentAlt settings">
+      <%= error_messages_for :account, :header_message => "", :message => "" %>
+
+      <div class="setting">
+        <h3>Article Reference</h3>
+        <%= form_for current_account, :url => account_path do |f| %>
+        <p class="inline">
+          <%= f.label :reference_prefix, "Format:" %>
+          <%= f.text_field :reference_prefix, :size => 5, :class => "text-input" %>
+          <%= f.select :reference_size, [1,2,3,4,5,6,7,8].collect{ |n| ["%0#{n}d" % 1, n] }, {}, :style => "text-align: right;" %>
+        </p>
+        <p class="inline">
+          <%= f.label :next_reference_id, "Next reference ID:" %>
+          <%= f.text_field :next_reference_id, :class => "text-input", :size => 10 %>
+          <%= f.submit "Save", :class => "button altbutton" %>
+        </p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

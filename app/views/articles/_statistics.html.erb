@@ -1,0 +1,26 @@
+<div class="statistics">
+  <table class="assignTable">
+    <tr>
+      <td><label>All-Time Visitors</label></td>
+      <td><label>Last 3 Months Visitors</label></td>
+      <td><label>Counters</label></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="text-input">
+          <%= text_field_tag 'allTime', @article.clicks, :class => "medium-wide-input", :disabled => true %>
+        </div>
+      </td>
+      <td>
+        <div class="text-input">
+          <%= text_field_tag 'rollingAverage', @article.clicks_rolling, :class => "medium-wide-input", :disabled => true %>
+        </div>
+        <small>(updates nightly)</small>
+      </td>
+      <td>
+        <%= button_to "Reset", article_counter_path(@article), :method => :delete, :class => "button altbutton" %>
+      </td>
+    </tr>
+  </table>
+</div>
+<br/>

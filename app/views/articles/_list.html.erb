@@ -1,0 +1,65 @@
+<%= form_tag batch_update_articles_path, :method => 'put', :id => 'batch_update' do %>
+<table id="articles">
+  <thead>
+    <tr>
+      <th class="tc"><input type="checkbox" class="check-all" value="true" /></th>
+      <%= sort_header_tag :state %>
+      <%= sort_header_tag :reference, :caption => 'Ref' %>
+      <%- sort_header_tag :title # temporarily disabling this %>
+      <th>Title</th>
+      <%= sort_header_tag :updated_at, :caption => 'Last Modified' %>
+      <%= sort_header_tag :author_name, :caption => 'Author' %>
+      <%= sort_header_tag :approver_name, :caption => 'Approver' %>
+      <%= sort_header_tag :rating %>
+      <%= sort_header_tag :votes %>
+      <%= sort_header_tag :clicks %>
+      <th class="tc">Actions</th>
+    </tr>
+  </thead>
+  <tfoot><!-- table foot - what to do with selected items -->
+    <tr>
+      <td colspan="9">
+        <label for="action">With selected do:</label>
+        <select id="batch_update_action" name="batch_update_action">
+          <option value="">-- Select action --</option>
+          <option value="assign">Assign to</option>
+          <option value="delete">Delete selected</option>
+        </select>
+        <%= select :article, :assigned_to_id, current_account.users.collect{ |u| [u.name, u.id] }, { :include_blank => "Unassigned" }, :style => "display: none;" %>
+        <input id="batch_update_submit" class="button altbutton" type="submit" value="OK" style="display: none" />
+      </td>
+      <td colspan="2" align="right">
+        <label>Articles per page:</label>
+        <%= select :article, :per_page, [10, 20, 50, 100], :selected => cookies[:per_page] %>
+      </td>
+    </tr>
+  </tfoot>
+  <tbody>
+    <% for article in @articles %>
+      <%= content_tag_for :tr, article do %>
+        <td class="tc"><input type="checkbox" name="article[id][]" value="<%= article.id %>" /></td>
+        <td><span class="tag-large tag-gray"><%= article.status %></span></td>
+        <td><%= article.reference %></td>
+        <td><%= link_to h(truncate(article.title, :length => 44)), edit_article_path(article) %></td>
+        <td><%= l article.updated_at, :format => :shorter_date_time %></td>
+        <td><%= article.try(:author_name) || "Unassigned" %></td>
+        <td><%= article.try(:approver_name) || "Unassigned" %></td>
+        <td><%= render_stars(article.rating) %></td>
+        <td><%= article.feedbacks_count %></td>
+        <td><%= article.clicks %></td>
+        <td class="tc">
+          <ul class="actions">
+            <li><%= link_to image_tag("/images/icons/pencil.png"), edit_article_path(article), :title  => "Edit", :class => "ico" %></li>
+            <li><%= link_to assignment_image_for(article), assign_article_path(article), :title  => assignment_title_for(article), :class => "ico" %></li>
+            <li><%= link_to image_tag("/images/icons/delete2.png"), article_path(article), :method => :delete, :title  => "Delete", :class => "deleteArticle ico" %></li>
+          </ul>
+        </td>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+<div class="pagination"><!-- pagination underneath the box's content -->
+  <%= will_paginate @articles, :renderer => PaginationListLinkRenderer %>
+</div>
+
